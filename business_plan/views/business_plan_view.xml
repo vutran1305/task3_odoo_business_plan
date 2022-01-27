@@ -1,0 +1,90 @@
+<odoo>
+    <data>
+        <record id="view_plan_sale_order_form" model="ir.ui.view">
+            <field name="name">plan.sale.order.form.view</field>
+            <field name="model">plan.sale.order</field>
+            <field name="arch" type="xml">
+                <form create="false" edit="false">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Plan name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Kittie"
+                                       attrs="{'readonly': [('state', '!=', 'new')]}" force_save="1"/>
+                            </h1>
+                        </div>
+                        <group name="images">
+                            <group>
+                                <field name="quotation_id"
+                                       attrs="{'readonly': ['|',('quotation_id', '!=', False), ('state', '!=', 'new')]}"
+                                       force_save="1"/>
+                                <field name="business_information" attrs="{'readonly': [('state', '!=', 'new')]}"
+                                       force_save="1"/>
+                                <field name="sale_order_state" />
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Approver">
+                                <field name="approver_line" widget="section_and_note_one2many"
+                                       attrs="{'readonly': [('state', '!=', 'new')]}" force_save="1">
+                                    <tree editable="bottom">
+                                        <field name="partner_id"
+                                               attrs="{'readonly': [ ('plan_state', '!=', 'new')]}"
+                                               force_save="1"/>
+                                        <field name="state" readonly='1' force_save="1"/>
+                                        <field name="plan_state" invisible='1'/>
+                                         <button class="btn btn-outline-success" name = 'action_button_approve' string="Approve" type="object" attrs="{'invisible':[('plan_state','=','new')]}"/>
+                                        <button class="btn btn-outline-danger" name = 'action_button_deny' string="Deny" type="object" attrs="{'invisible':[('plan_state','=','new')]}"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <button class="btn btn-success" name="send_mail_template" type="object" string="Send message"
+                                data-hotkey="q" attrs="{'invisible': [('state', '!=', 'new')]}"/>
+                        <button class="btn btn-outline-primary" name="confirm_order" type="object" string="Confirm the order."
+                                data-hotkey="q" attrs="{'invisible': ['|',('state', '!=', 'accept'),('sale_order_state', '=' ,'done')]}"/>
+                    </sheet>
+
+                    <footer>
+                        <button name="write" type="object" string="Save" invisible='1'/>
+                        <button name="cancel" string="Cancel" special="cancel" class="oe_link" invisible='1'/>
+                    </footer>
+
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_business_plan_tree">
+            <field name="name">business_plan_tree</field>
+            <field name="model">plan.sale.order</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="name"/>
+                <field name="quotation_id"/>
+                <field name="business_information"/>
+                <field name="state"/>
+
+            </field>
+        </record>
+
+
+        <record id="action_product_warranty" model="ir.actions.act_window">
+            <field name="name">Business Plan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">plan.sale.order</field>
+            <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('view_business_plan_tree')}),
+                                                (0, 0, {'view_mode': 'form', 'view_id': ref('view_plan_sale_order_form')})]"/>
+        </record>
+
+
+        <menuitem id="menu_product_warranty_valid"
+                  name="Business Plan"
+                  action="action_product_warranty"
+                  sequence="9"
+                  parent="sale.sale_menu_root"/>
+    </data>
+</odoo>
