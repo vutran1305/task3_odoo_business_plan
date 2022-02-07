@@ -4,29 +4,28 @@ from datetime import datetime
 
 class BusinessPlan(models.Model):
     _name = 'plan.sale.order'
-    name = fields.Text("Name", required=True)
-    quotation_id = fields.Many2one('sale.order', required=True)
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    name = fields.Text("Name")
+    sale_order_id = fields.Many2one('sale.order')
     business_information = fields.Text("Business information")
     state = fields.Selection([('new', 'New'), ('sent', 'Plan sent'), ('accept', 'Accept'), ('callceled', "Callceled")],
-                             string='Action Plan', default='new', required=True)
-    approver_line = fields.One2many('approval.line', 'plan_id', string='Approver Lines', required=True)
-    sale_order_state = fields.Selection(related='quotation_id.state', string="Order State")
+                             string='Action Plan', default='new')
+    approver_lines = fields.One2many('approval.line', 'plan_id', string='Approver Lines')
+    sale_order_state = fields.Selection(related='sale_order_id.state', string="Order State")
 
-    # If click button send message
+
+
+
+    #send message to list user
     def send_mail_template(self):
         for record in self:
             record.state = 'sent'
-            record.quotation_id.business_plan = record
-            user_ids = record.approver_line.partner_id
-            print(user_ids)
-            print(user_ids.ids)
+            record.sale_order_id.business_plan = record.id
             partner_ids =[]
-            for user in user_ids:
-                partner_ids.append(user.partner_id.id)
-            print(partner_ids)
-
-            body = "Bạn có 1 plan cần phê duyệt! " + datetime.now().strftime("%H:%M:%S  %d/%m/%Y")
-            record.quotation_id.message_post( message_type='notification', partner_ids=partner_ids, body=body)
+            for line in record.approver_lines:
+                partner_ids.append(line.user_id.partner_id.id)
+            body = "A business plan has been created that needs approval! " + datetime.now().strftime("%H:%M:%S  %d/%m/%Y")
+            record.sale_order_id.message_post( message_type='notification', partner_ids=partner_ids, body=body)
 
         message_id = self.env['message.wizard'].create({'message': "Invitation is successfully sent"})
         return {
@@ -38,6 +37,8 @@ class BusinessPlan(models.Model):
             'target': 'new'
         }
 
+
+    #action click button  "Confirm the order."
     def confirm_order(self):
         for record in self:
-            record.quotation_id.state = 'done'
+            record.sale_order_id.state = 'done'

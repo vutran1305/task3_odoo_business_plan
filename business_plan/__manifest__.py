@@ -26,8 +26,9 @@
     'data': [
         'security/ir.model.access.csv',
         'views/business_plan_view.xml',
-        'views/aprroval_line_view.xml',
+        # 'views/aprroval_line_view.xml',
         'views/show_form_business_in_quotation.xml',
+        'security/security.xml',
         'wizard/success_message.xml',
 
     ],

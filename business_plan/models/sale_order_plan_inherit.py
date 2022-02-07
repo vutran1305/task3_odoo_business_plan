@@ -8,10 +8,10 @@ class PlanSale(models.Model):
 
 
 
-
+    #Show form create business plan
     def action_create_plan(self):
      course_form = self.env.ref('business_plan.view_plan_sale_order_form', False)
-     quotation_id = self.id
+     sale_order_id = self.id
      return {
 
          'name': 'New Course',
@@ -33,14 +33,9 @@ class PlanSale(models.Model):
 
          'flags': {'action_buttons': True},
 
-         'context': {'default_quotation_id': quotation_id},
-
-
-
-
+         'context': {'default_sale_order_id': sale_order_id},
 
      }
-
 
 
 

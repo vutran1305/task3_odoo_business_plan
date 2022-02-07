@@ -13,31 +13,35 @@
                             <label for="name" string="Plan name"/>
                             <h1>
                                 <field name="name" placeholder="e.g. Kittie"
-                                       attrs="{'readonly': [('state', '!=', 'new')]}" force_save="1"/>
+                                       attrs="{'readonly': [('state', '!=', 'new')]}" force_save="1" required="True"/>
                             </h1>
                         </div>
                         <group name="images">
                             <group>
-                                <field name="quotation_id"
-                                       attrs="{'readonly': ['|',('quotation_id', '!=', False), ('state', '!=', 'new')]}"
-                                       force_save="1"/>
+                                <field name="sale_order_id"
+                                       attrs="{'readonly': ['|',('sale_order_id', '!=', False), ('state', '!=', 'new')]}"
+                                       force_save="1" />
                                 <field name="business_information" attrs="{'readonly': [('state', '!=', 'new')]}"
-                                       force_save="1"/>
+                                       force_save="1" required="True"/>
                                 <field name="sale_order_state" />
                             </group>
                         </group>
                         <notebook>
                             <page string="Approver">
-                                <field name="approver_line" widget="section_and_note_one2many"
-                                       attrs="{'readonly': [('state', '!=', 'new')]}" force_save="1">
+                                <field name="approver_lines" widget="section_and_note_one2many"
+
+                                       attrs="{'readonly': [('state', '!=', 'new')]}" required="True" force_save="1">
                                     <tree editable="bottom">
-                                        <field name="partner_id"
+                                        <field name="user_id"
                                                attrs="{'readonly': [ ('plan_state', '!=', 'new')]}"
-                                               force_save="1"/>
+                                               force_save="1" />
                                         <field name="state" readonly='1' force_save="1"/>
                                         <field name="plan_state" invisible='1'/>
-                                         <button class="btn btn-outline-success" name = 'action_button_approve' string="Approve" type="object" attrs="{'invisible':[('plan_state','=','new')]}"/>
-                                        <button class="btn btn-outline-danger" name = 'action_button_deny' string="Deny" type="object" attrs="{'invisible':[('plan_state','=','new')]}"/>
+                                         <field name="is_user" invisible='1' />
+                                         <button class="btn btn-outline-success" name = 'action_button_approve' string="Approve" type="object"
+                                                 attrs="{'invisible':['|', '|', ('state','!=','wait'),('plan_state','=','new'),('is_user' ,'=', False)]}"/>
+                                        <button class="btn btn-outline-danger" name = 'action_button_deny' string="Deny" type="object"
+                                                attrs="{'invisible':['|', '|', ('state','!=','wait'),('plan_state','=','new'),('is_user' ,'=', False)]}"/>
                                     </tree>
                                 </field>
                             </page>
@@ -47,6 +51,12 @@
                         <button class="btn btn-outline-primary" name="confirm_order" type="object" string="Confirm the order."
                                 data-hotkey="q" attrs="{'invisible': ['|',('state', '!=', 'accept'),('sale_order_state', '=' ,'done')]}"/>
                     </sheet>
+
+                    <div class="oe_chatter">
+                            <field name="message_follower_ids"/>
+                            <field name="activity_ids"/>
+                            <field name="message_ids"/>
+                        </div>
 
                     <footer>
                         <button name="write" type="object" string="Save" invisible='1'/>
@@ -64,9 +74,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <field name="name"/>
-                <field name="quotation_id"/>
+                <field name="sale_order_id"/>
                 <field name="business_information"/>
                 <field name="state"/>
+
 
             </field>
         </record>

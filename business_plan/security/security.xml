@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="business_plan" model="res.groups">
+        <field name="name">Business Plan</field>
+    </record>
+
+
+<!--    <record model="ir.rule" id="business_plan_group" >-->
+<!--            <field name="name">#User can only see </field>-->
+<!--            <field name="model_id" ref="business_plan.model_plan_sale_order"/>-->
+<!--            <field name="groups" eval="[(4, ref('business_plan.business_plan'))]"/>-->
+<!--            <field name="perm_read" eval="True"/>-->
+<!--            <field name="perm_write" eval="False"/>-->
+<!--            <field name="perm_create" eval="False"/>-->
+<!--            <field name="perm_unlink" eval="False"/>-->
+<!--        </record>-->
+
+
+</odoo>

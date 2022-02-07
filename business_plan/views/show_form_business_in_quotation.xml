@@ -7,13 +7,31 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/header/button[@name='action_draft']"
-                       position="after">
-                    <button name="action_create_plan" string="Create plan" type="object" attrs="{'invisible': ['|' , ('business_plan', '!=', False) , ('state','!=' , 'draft')]}" />
+                <xpath expr="/form/header"
+                       position="attributes">
+                    <attribute name="invisible">True</attribute>
                 </xpath>
-                <xpath expr = "//field[@name='partner_id']" position="after">
-                    <field name="business_plan" readonly = '1' force_save = '1' />
 
+                <xpath expr="/form/header"
+                       position="after">
+                    <div class="alert alert-info" role="alert" style="height: 40px; margin-bottom:0px;"
+                         attrs="{'invisible':[('business_plan', '!=', False)]}">
+                        Chưa có kế hoạch kinh doanh <strong></strong>.
+                    </div>
+                    <div class="alert alert-warning" role="alert" style="height: 40px; margin-bottom:0px;"
+                         attrs="{'invisible':['|',('business_plan', '=', False),('state', '=', 'done')]}">
+                        Kế hoạch kinh doanh chưa được duyệt <strong></strong>.
+                    </div>
+                    <header>
+                        <button name="action_create_plan" string="Create plan" type="object"
+                                attrs="{'invisible': ['|' , ('business_plan', '!=', False) , ('state','!=' , 'draft')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
+                    </header>
+
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="business_plan" readonly='1' force_save='1'/>
                 </xpath>
             </field>
         </record>
