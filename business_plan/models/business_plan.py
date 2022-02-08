@@ -38,7 +38,3 @@ class BusinessPlan(models.Model):
         }
 
 
-    #action click button  "Confirm the order."
-    def confirm_order(self):
-        for record in self:
-            record.sale_order_id.state = 'done'

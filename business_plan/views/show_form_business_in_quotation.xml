@@ -14,17 +14,13 @@
 
                 <xpath expr="/form/header"
                        position="after">
-                    <div class="alert alert-info" role="alert" style="height: 40px; margin-bottom:0px;"
-                         attrs="{'invisible':[('business_plan', '!=', False)]}">
-                        Chưa có kế hoạch kinh doanh <strong></strong>.
-                    </div>
-                    <div class="alert alert-warning" role="alert" style="height: 40px; margin-bottom:0px;"
-                         attrs="{'invisible':['|',('business_plan', '=', False),('state', '=', 'done')]}">
-                        Kế hoạch kinh doanh chưa được duyệt <strong></strong>.
-                    </div>
+
                     <header>
                         <button name="action_create_plan" string="Create plan" type="object"
                                 attrs="{'invisible': ['|' , ('business_plan', '!=', False) , ('state','!=' , 'draft')]}"/>
+                        <button name="action_check_plan" string="Check plan" type="object" />
+                        <button class="btn btn-outline-primary" name="confirm_order" type="object" string="Confirm the order."
+                                data-hotkey="q" attrs="{'invisible': ['|',('plan_state', '!=', 'accept'),('state', '=' ,'done')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                     </header>
 
@@ -32,6 +28,7 @@
 
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="business_plan" readonly='1' force_save='1'/>
+                     <field name="plan_state" invisible = '1' />
                 </xpath>
             </field>
         </record>

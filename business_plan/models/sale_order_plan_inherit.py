@@ -1,12 +1,11 @@
 
 from odoo import models, fields, api
-
+from odoo.exceptions import MissingError ,AccessError
 
 class PlanSale(models.Model):
     _inherit = 'sale.order'
     business_plan = fields.Many2one('plan.sale.order')
-
-
+    plan_state =   fields.Selection( related = 'business_plan.state', string ="Plan State" )
 
     #Show form create business plan
     def action_create_plan(self):
@@ -36,6 +35,33 @@ class PlanSale(models.Model):
          'context': {'default_sale_order_id': sale_order_id},
 
      }
+
+    def action_check_plan(self):
+        for rec in self:
+            if not rec.business_plan:
+                raise MissingError("Plan doesn't exits")
+            if rec.plan_state != 'accept':
+                raise AccessError("Plan is not approval")
+            else:
+                message_id = self.env['message.wizard'].create({'message': "Plan approval"})
+                return {
+                    'name': 'Successfull',
+                    'type': 'ir.actions.act_window',
+                    'view_mode': 'form',
+                    'res_model': 'message.wizard',
+                    'res_id': message_id.id,
+                    'target': 'new'
+                }
+
+
+
+    # action click button  "Confirm the order."
+    def confirm_order(self):
+        for record in self:
+            record.state = 'done'
+
+
+
 
 
 

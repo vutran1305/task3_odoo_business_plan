@@ -48,8 +48,7 @@
                         </notebook>
                         <button class="btn btn-success" name="send_mail_template" type="object" string="Send message"
                                 data-hotkey="q" attrs="{'invisible': [('state', '!=', 'new')]}"/>
-                        <button class="btn btn-outline-primary" name="confirm_order" type="object" string="Confirm the order."
-                                data-hotkey="q" attrs="{'invisible': ['|',('state', '!=', 'accept'),('sale_order_state', '=' ,'done')]}"/>
+
                     </sheet>
 
                     <div class="oe_chatter">
