@@ -1,5 +1,5 @@
 
-from odoo import models, fields, api
+from odoo import models, fields
 from odoo.exceptions import MissingError ,AccessError
 
 class PlanSale(models.Model):

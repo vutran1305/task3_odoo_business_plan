@@ -23,7 +23,6 @@
                                 data-hotkey="q" attrs="{'invisible': ['|',('plan_state', '!=', 'accept'),('state', '=' ,'done')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,sale"/>
                     </header>
-
                 </xpath>
 
                 <xpath expr="//field[@name='partner_id']" position="after">
